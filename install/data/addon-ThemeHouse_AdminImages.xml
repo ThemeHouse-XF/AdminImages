@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="ThemeHouse_AdminImages" title="[⌂] Admin Image Uploader" version_string="1.0.3" version_id="1447261019" url="http://xf.themehouse.io/" install_callback_class="ThemeHouse_Install" install_callback_method="install" uninstall_callback_class="ThemeHouse_Install" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="images" parent_navigation_id="applications" display_order="100" link="images" admin_permission_id="" debug_only="0" hide_no_children="1"/>
+    <navigation navigation_id="listImages" parent_navigation_id="images" display_order="1" link="images" admin_permission_id="image" debug_only="0" hide_no_children="0"/>
+    <navigation navigation_id="uploadImage" parent_navigation_id="images" display_order="10" link="images/upload" admin_permission_id="image" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions>
+    <admin_permission admin_permission_id="image" display_order="135"/>
+  </admin_permissions>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="th_admin_image_list_adminimages"><![CDATA[<xen:title>{xen:phrase th_images_adminimages}</xen:title>
+
+<xen:topctrl>
+	<a href="{xen:adminlink 'images/upload'}" class="button">+ {xen:phrase th_upload_image_adminimages}</a>
+</xen:topctrl>
+
+<xen:require js="js/xenforo/filter_list.js" />
+<xen:require css="filter_list.css" />
+
+<xen:if is="{$attachments}">
+	<xen:form action="{xen:adminlink images}" class="section">
+
+		<h2 class="subHeading">
+			{xen:phrase th_images_adminimages}
+		</h2>
+
+		<ol id="AttachmentList" class="FilterList Scrollable secondRow SquareThumbs"
+				data-thumb-height="44"
+				data-thumb-selector="a.SquareThumb">
+			<xen:foreach loop="$attachments" value="$attachment">
+				<xen:listitem
+					id="{$attachment.attachment_id}"
+					label="{$attachment.title}"
+					href="{xen:link 'attachments', $attachment}"
+					delete="{xen:adminlink 'attachments/delete', $attachment}">
+					<xen:beforelabel>
+						<a href="{xen:link attachments, $attachment}" class="SquareThumb">{xen:if {$attachment.thumbnailUrl}, '<img src="{$attachment.thumbnailUrl}" alt="{$attachment.filename}" />'}</a>
+					</xen:beforelabel>
+					<xen:label>
+						{$attachment.filename}
+						<span class="secondRow">
+							<xen:datetime time="{$attachment.upload_date}" class="faint" />
+							{xen:phrase by_x, 'name={$attachment.username}'}
+							-
+							{xen:number $attachment.file_size, size}
+						</span>
+					</xen:label>
+				</xen:listitem>
+			</xen:foreach>
+		</ol>
+
+		<p class="sectionFooter">{xen:phrase showing_x_of_y_items, 'count=<span class="FilterListCount">{xen:number $total}</span>', 'total={xen:number $total}'}</p>
+	</xen:form>
+	<div class="footerControls">
+		<xen:adminpagenav page="{$page}" perpage="{$perPage}" total="{$total}" link="images" linkparams="{$pageParams}" />
+	</div>
+<xen:else />
+	<div class="noResults">{xen:phrase no_results_found}</div>
+</xen:if>]]></template>
+    <template title="th_admin_image_upload_adminimages"><![CDATA[<xen:title>{xen:phrase th_upload_image_adminimages}</xen:title>
+
+<xen:form action="{xen:adminlink 'images/upload'}" upload="true">
+	
+	<xen:uploadunit label="{xen:phrase th_upload_image_adminimages}:" name="admin_image" />
+
+	<xen:radiounit label="{xen:phrase th_attach_to_adminimages}:" name="type" value="{$type}">
+		<xen:options source="$typeChoices" />
+	</xen:radiounit>
+
+	<xen:submitunit save="{xen:phrase th_upload_image_adminimages}..." />
+		
+</xen:form>]]></template>
+  </admin_templates>
+  <admin_template_modifications/>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="controller_pre_dispatch" execute_order="10" callback_class="ThemeHouse_Listener_ControllerPreDispatch" callback_method="controllerPreDispatch" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="ThemeHouse_AdminImages_Listener_FileHealthCheck" callback_method="fileHealthCheck" active="1" hint="" description=""/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ThemeHouse_Listener_InitDependencies" callback_method="initDependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class" execute_order="10" callback_class="ThemeHouse_AdminImages_Listener_LoadClass" callback_method="loadClassModel" active="0" hint="XenForo_Model_Attachment" description="XenForo_Model_Attachment (For XenForo 1.2 and above)" compatibility_switch="1"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="ThemeHouse_AdminImages_Listener_LoadClass" callback_method="loadClassModel" active="1" hint="" description="(For XenForo 1.1 and below)" compatibility_switch="1"/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups/>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_images" version_id="1347651959" version_string="1.0.0"><![CDATA[Images]]></phrase>
+    <phrase title="admin_navigation_listImages" version_id="1347651959" version_string="1.0.0"><![CDATA[List Images]]></phrase>
+    <phrase title="admin_navigation_uploadImage" version_id="1347651959" version_string="1.0.0"><![CDATA[Upload Image]]></phrase>
+    <phrase title="admin_permission_image" version_id="1347651959" version_string="1.0.0"><![CDATA[Manage images]]></phrase>
+    <phrase title="th_attach_to_adminimages" version_id="1347898068" version_string="1.0.0"><![CDATA[Attach to]]></phrase>
+    <phrase title="th_images_adminimages" version_id="1347898068" version_string="1.0.0"><![CDATA[Images]]></phrase>
+    <phrase title="th_please_select_a_valid_attach_to_item_adminimages" version_id="1347968807" version_string="1.0.0"><![CDATA[Please select a valid item to attach to.]]></phrase>
+    <phrase title="th_uploaded_file_is_not_an_image_adminimages" version_id="1347901707" version_string="1.0.0"><![CDATA[The uploaded file is not an image.]]></phrase>
+    <phrase title="th_upload_image_adminimages" version_id="1347898068" version_string="1.0.0"><![CDATA[Upload Image]]></phrase>
+  </phrases>
+  <route_prefixes>
+    <route_type type="admin">
+      <prefix original_prefix="images" class="ThemeHouse_AdminImages_Route_PrefixAdmin_Images" build_link="data_only"/>
+    </route_type>
+  </route_prefixes>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications>
+    <modification template="footer" modification_key="th_copyrightNotice_adminImages" description="Copyright notice for [⌂] Admin Image Uploader" execution_order="1" enabled="1" action="callback">
+      <find><![CDATA[/{xen:phrase (?:xenforo|extra)_copyright}/]]></find>
+      <replace><![CDATA[ThemeHouse_Listener_InitDependencies::copyrightNotice]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
